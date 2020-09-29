@@ -16,7 +16,7 @@ const InterviewerListItem = (props) => {
   return (
   <li
     className={interviewerListItemClass}
-    onClick={props.setInterviewer}
+    onClick={props.onChange}
   >
     <img
       className={imgClass}
