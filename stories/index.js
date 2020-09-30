@@ -157,40 +157,40 @@ storiesOf("Button", module)
         .add("Header", () => <Header time={"12pm"}/>)
         .add("Empty", () => <Empty onAdd={action("onAdd")}/>)
         .add("Show", () => (
-        <Show 
-          student={"Lydia Miller-Jones"}
-          interviewer={interviewers[0].name}
-          onEdit={action("onEdit")}
-          onDelete={action("onDelete")}
-        />
-      ))
+          <Show 
+              student={"Lydia Miller-Jones"}
+              interviewer={interviewers[0].name}
+              onEdit={action("onEdit")}
+              onDelete={action("onDelete")}
+          />
+        ))
         .add("Confirm", () => (
-        <Confirm 
-        message={"Delete the appointment?"}
-        onConfirm={action("onConfirm")}
-        onCancel={action("onCancel")}
-        />
-      ))
+          <Confirm 
+            message={"Delete the appointment?"}
+            onConfirm={action("onConfirm")}
+            onCancel={action("onCancel")}
+          />
+        ))
         .add("Status", () => <Status message={"Deleting"}/>)
         .add("Error", () => (
-        <Error
-         message={"Could not delete appointment"}
-         onClose={action("onClose")}
-        />
-      ))
+          <Error
+            message={"Could not delete appointment"}
+            onClose={action("onClose")}
+          />
+        ))
         .add("Edit", () => (
-        <Form 
-        name={"Lydia Miller-Jones"}
-        interviewers={interviewers}
-        interviewer={1}
-        onSave={action("onSave")}
-        onCancel={action("onCancel")}
-        />
-      ))
+          <Form 
+            name={"Lydia Miller-Jones"}
+            interviewers={interviewers}
+            interviewer={1}
+            onSave={action("onSave")}
+            onCancel={action("onCancel")}
+          />
+        ))  
         .add("Create", () => (
           <Form 
-          interviewers={interviewers}
-          onSave={action("onSave")}
-          onCancel={action("onCancel")}
+            interviewers={interviewers}
+            onSave={action("onSave")}
+            onCancel={action("onCancel")}
           />
         ));
