@@ -177,4 +177,4 @@ storiesOf("Button", module)
         onSave={action("onSave")}
         onCancel={action("onCancel")}
         />
-      ))
+      ));

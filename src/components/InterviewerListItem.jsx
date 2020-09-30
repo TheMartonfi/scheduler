@@ -14,17 +14,17 @@ const InterviewerListItem = (props) => {
   });
 
   return (
-  <li
-    className={interviewerListItemClass}
-    onClick={props.onChange}
-  >
-    <img
-      className={imgClass}
-      src={props.avatar}
-      alt={props.name}
-    />
-    {props.selected && props.name}
-  </li>
+    <li
+      className={interviewerListItemClass}
+      onClick={props.onChange}
+    >
+      <img
+        className={imgClass}
+        src={props.avatar}
+        alt={props.name}
+      />
+      {props.selected && props.name}
+    </li>
   );
 };
 
