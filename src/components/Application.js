@@ -16,19 +16,26 @@ export default function Application(props) {
   const setDay = day => setState(prev => ({ ...prev, day }));
   const dailyAppointments = [ ...getAppointmentsForDay(state, state.day), { id: "last", time: "5pm" } ];
   const dailyInterviewers = [...getInterviewersForDay(state, state.day)];
-  const schedule = dailyAppointments.map((appointment) => {
-  const interview = getInterview(state, appointment.interview);
 
-    return (
-      <Appointment
-        key={appointment.id}
-        id={appointment.id}
-        time={appointment.time}
-        interview={interview}
-        interviewers={dailyInterviewers}
-      />
-    );
-  });
+  const bookInterview = (id, interview) => {
+    console.log(id, interview);
+  };
+
+  const schedule = dailyAppointments.map((appointment) => {
+    const interview = getInterview(state, appointment.interview);
+
+      return (
+        <Appointment
+          key={appointment.id}
+          id={appointment.id}
+          time={appointment.time}
+          interview={interview}
+          interviewers={dailyInterviewers}
+          bookInterview={bookInterview}
+        />
+      );
+    });
+
 
   React.useEffect(() => {
 

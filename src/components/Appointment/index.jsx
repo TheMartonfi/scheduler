@@ -16,6 +16,15 @@ const Appointment = (props) => {
     props.interview ? SHOW : EMPTY
   );
 
+  const save = (name, interviewer) => {
+    const interview = {
+      student: name,
+      interviewer
+    };
+
+    props.bookInterview(props.id, interview);
+  };
+
   return (
     <article className="appointment">
       <Header />
@@ -30,6 +39,7 @@ const Appointment = (props) => {
         <Form
           interviewers={props.interviewers}
           onCancel={() => back()}
+          onSave={save}
         />
       )}
     </article>
