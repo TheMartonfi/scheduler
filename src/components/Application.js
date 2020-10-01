@@ -14,7 +14,7 @@ export default function Application(props) {
     appointments: {}
   });
 
-  const dailyAppointments = getAppointmentsForDay(state, state.day);
+  const dailyAppointments = [ ...getAppointmentsForDay(state, state.day), { id: "last", time: "5pm" }];
 
   React.useEffect(() => {
 
