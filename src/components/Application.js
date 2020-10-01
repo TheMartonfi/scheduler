@@ -8,6 +8,27 @@ import { getInterview } from "helpers/selectors";
 
 export default function Application(props) {
 
+  const [state, setState] = React.useState({
+    day: "Monday",
+    days: [],
+    appointments: {},
+    interviewers: {}
+  });
+  const setDay = day => setState(prev => ({ ...prev, day }));
+  const dailyAppointments = [ ...getAppointmentsForDay(state, state.day), { id: "last", time: "5pm" } ];
+  const schedule = dailyAppointments.map((appointment) => {
+  const interview = getInterview(state, appointment.interview);
+
+    return (
+      <Appointment
+        key={appointment.id}
+        id={appointment.id}
+        time={appointment.time}
+        interview={interview}
+      />
+    );
+  });
+
   React.useEffect(() => {
 
     const daysPromise = axios.get("api/days");
@@ -20,27 +41,6 @@ export default function Application(props) {
         setState(prev => ({ ...prev, days: all[0].data, appointments: all[1].data, interviewers: all[2].data }));
       });
   }, []);
-  
-  const [state, setState] = React.useState({
-    day: "Monday",
-    days: [],
-    appointments: {},
-    interviewers: {}
-  });
-  const setDay = day => setState(prev => ({ ...prev, day }));
-  const dailyAppointments = [ ...getAppointmentsForDay(state, state.day), { id: "last", time: "5pm" } ];
-  const schedule = dailyAppointments.map((appointment) => {
-    const interview = getInterview(state, appointment.interview);
-  
-    return (
-      <Appointment
-        key={appointment.id}
-        id={appointment.id}
-        time={appointment.time}
-        interview={interview}
-      />
-    );
-  });
 
   return (
     <main className="layout">
