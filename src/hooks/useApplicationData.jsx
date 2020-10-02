@@ -18,11 +18,7 @@ const useApplicationData = () => {
     let newSpots = days.map((day) => {
 
       if (day.appointments.includes(id)) {
-        if (add) {
-          day.spots = day.spots + 1;
-        } else {
-          day.spots = day.spots - 1;
-        }
+        add ? day.spots = day.spots + 1 : day.spots = day.spots - 1;
       }
 
       return day;
