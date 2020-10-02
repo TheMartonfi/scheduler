@@ -16,7 +16,7 @@ export default function Application(props) {
 
   const setDay = day => setState(prev => ({ ...prev, day }));
   const dailyAppointments = [ ...getAppointmentsForDay(state, state.day), { id: "last", time: "5pm" } ];
-  const dailyInterviewers = [...getInterviewersForDay(state, state.day)];
+  const dailyInterviewers = [ ...getInterviewersForDay(state, state.day) ];
 
   const bookInterview = (id, interview) => {
 
@@ -70,7 +70,6 @@ export default function Application(props) {
         />
       );
     });
-
 
   React.useEffect(() => {
 
