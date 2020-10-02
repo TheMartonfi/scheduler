@@ -47,13 +47,13 @@ const Appointment = (props) => {
       interviewer
     };
 
-    transition(DELETING, true);
+    transition(DELETING);
     props.cancelInterview(props.id, interview)
       .then(() => {
         transition(EMPTY);
       })
       .catch(() => {
-        transition(ERROR_DELETE);
+        transition(ERROR_DELETE, true);
       });
   };
 

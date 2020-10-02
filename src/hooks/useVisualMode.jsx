@@ -17,10 +17,9 @@ const useVisualMode = (initial) => {
 
   const back = () => {
     if (history.length > 1) {
-      const historyCopy = [...history];
-      historyCopy.pop();
-      setHistory(historyCopy);
-      setMode(historyCopy[historyCopy.length - 1]);
+      history.pop();
+      setHistory([ ...history ]);
+      setMode(history[history.length - 1]);
     }
   };
 
