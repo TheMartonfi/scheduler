@@ -30,7 +30,7 @@ const useApplicationData = () => {
       });
   };
 
-  const cancelInterview = (id, interview) => {
+  const cancelInterview = (id) => {
 
     const appointment = {
       ...state.appointments[id],
@@ -43,9 +43,9 @@ const useApplicationData = () => {
     };
 
     return axios.delete(`/api/appointments/${id}`, appointment)
-    .then(() => {
-      setState(prev => ({ ...prev, appointments }));
-    });
+      .then(() => {
+        setState(prev => ({ ...prev, appointments }));
+      });
 
   };
 
