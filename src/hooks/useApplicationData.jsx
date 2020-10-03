@@ -6,7 +6,6 @@ const useApplicationData = () => {
   const SET_DAY = "SET_DAY";
   const SET_APPLICATION_DATA = "SET_APPLICATION_DATA";
   const SET_INTERVIEW = "SET_INTERVIEW";
-  const SET_SPOTS = "SET_SPOTS";
 
   const initialState = {
     day: "Monday",
@@ -23,8 +22,6 @@ const useApplicationData = () => {
         return { ...state, ...action.value }
       case SET_INTERVIEW:
         return { ...state, appointments: action.value }
-      case SET_SPOTS:
-        return { ...state, days: action.value }
       default:
         throw new Error(
           `Tried to reduce with unsupported action type: ${action.type}`
@@ -46,7 +43,7 @@ const useApplicationData = () => {
       return day;
     });
 
-    dispatch({ type: SET_SPOTS, value: days })
+    dispatch({ type: SET_APPLICATION_DATA, value: days });
   };
 
   const bookInterview = (id, interview) => {
