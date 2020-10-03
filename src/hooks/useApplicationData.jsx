@@ -8,6 +8,13 @@ const useApplicationData = () => {
   const SET_INTERVIEW = "SET_INTERVIEW";
   const SET_SPOTS = "SET_SPOTS";
 
+  const initialState = {
+    day: "Monday",
+    days: [],
+    appointments: {},
+    interviewers: {}
+  };
+
   const reducer = (state, action) => {
     switch (action.type) {
       case SET_DAY:
@@ -25,15 +32,7 @@ const useApplicationData = () => {
     }
   };
 
-  const initialState = {
-    day: "Monday",
-    days: [],
-    appointments: {},
-    interviewers: {}
-  };
-
   const [state, dispatch] = React.useReducer(reducer, initialState);
-
   const setDay = day => dispatch({ type: SET_DAY, value: day });
 
   const setSpots = (id, add) => {
@@ -65,8 +64,9 @@ const useApplicationData = () => {
     return axios.put(`/api/appointments/${id}`, appointment)
       .then(() => {
         dispatch({ type: SET_INTERVIEW, value: appointments });
-        setSpots(id, false);
-      })
+        // If the interview is not booked remove spot
+        !state.appointments[id].interview && setSpots(id, false);
+      });
   };
 
   const cancelInterview = (id) => {
