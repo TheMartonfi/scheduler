@@ -18,14 +18,14 @@ const useApplicationData = () => {
   const reducer = (state, action) => {
     switch (action.type) {
       case SET_DAY:
-        return { ...state, day: action.day }
+        return { ...state, day: action.day };
       case SET_APPLICATION_DATA:
         return {
           ...state,
           days: action.days,
           appointments: action.appointments,
           interviewers: action.interviewers
-        }
+        };
       case SET_INTERVIEW:
         return {
           ...state,
@@ -33,7 +33,7 @@ const useApplicationData = () => {
             ...state.appointments,
             [action.id]: { ...state.appointments[action.id], interview: action.interview }
           }
-        }
+        };
       case SET_SPOTS:
         return { ...state, ...action.days }
       default:
@@ -68,6 +68,7 @@ const useApplicationData = () => {
 
     return axios.delete(`/api/appointments/${id}`, appointment)
       .then(() => {
+        dispatch({ type: SET_INTERVIEW, id, "interview": null });
       });
   };
 
@@ -128,8 +129,9 @@ const useApplicationData = () => {
       day.spots = spots;
       return day;
     });
-    
+ 
     dispatch({ type: SET_SPOTS, days });
+
   }, [state.days, state.appointments]);
 
   return { state, setDay, bookInterview, cancelInterview };
