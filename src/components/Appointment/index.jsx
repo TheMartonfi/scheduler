@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 import "components/Appointment/styles.scss";
 import Header from "components/Appointment/Header";
 import Empty from "components/Appointment/Empty";
@@ -17,31 +17,31 @@ const DELETING = "DELETING";
 const CONFIRM = "CONFIRM";
 const EDIT = "EDIT";
 const ERROR_SAVE = "ERROR_SAVE";
-const ERROR_DELETE = "ERROR_DELETE"
+const ERROR_DELETE = "ERROR_DELETE";
 
-const Appointment = (props) => {
-
+const Appointment = props => {
   const { mode, transition, back } = useVisualMode(
     props.interview ? SHOW : EMPTY
   );
 
   React.useEffect(() => {
     if (props.interview && mode === EMPTY) {
-     transition(SHOW);
+      transition(SHOW);
     }
     if (props.interview === null && mode === SHOW) {
-     transition(EMPTY);
+      transition(EMPTY);
     }
-   }, [props.interview, transition, mode]);
+  }, [props.interview, transition, mode]);
 
   const save = (name, interviewer) => {
     const interview = {
       student: name,
-      interviewer
+      interviewer,
     };
 
     transition(SAVING);
-    props.bookInterview(props.id, interview)
+    props
+      .bookInterview(props.id, interview)
       .then(() => {
         transition(SHOW);
       })
@@ -51,9 +51,9 @@ const Appointment = (props) => {
   };
 
   const destroy = () => {
-
     transition(DELETING, true);
-    props.cancelInterview(props.id)
+    props
+      .cancelInterview(props.id)
       .then(() => {
         transition(EMPTY);
       })
@@ -64,7 +64,7 @@ const Appointment = (props) => {
 
   return (
     <article className="appointment">
-      <Header time={props.time}/>
+      <Header time={props.time} />
       {mode === EMPTY && <Empty onAdd={() => transition(CREATE)} />}
       {mode === SHOW && props.interview && (
         <Show
@@ -84,8 +84,8 @@ const Appointment = (props) => {
       {mode === SAVING && <Status message={SAVING} />}
       {mode === DELETING && <Status message={DELETING} />}
       {mode === CONFIRM && (
-        <Confirm 
-          onCancel={() => back()} 
+        <Confirm
+          onCancel={() => back()}
           onConfirm={() => destroy()}
           message={"Are you sure you would like to delete?"}
         />
@@ -100,10 +100,7 @@ const Appointment = (props) => {
         />
       )}
       {mode === ERROR_SAVE && (
-        <Error
-          onClose={() => back()}
-          message={"Could not book appointment."}
-        />
+        <Error onClose={() => back()} message={"Could not book appointment."} />
       )}
       {mode === ERROR_DELETE && (
         <Error
