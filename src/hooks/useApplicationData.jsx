@@ -35,7 +35,7 @@ const useApplicationData = () => {
           }
         };
       case SET_SPOTS:
-        return { ...state, ...action.days }
+        return { ...state, days: action.days }
       default:
         throw new Error(
           `Tried to reduce with unsupported action type: ${action.type}`
@@ -118,21 +118,23 @@ const useApplicationData = () => {
   // Update spots when appointments change
   React.useEffect(() => {
 
-    let days = state.days.map((day) => {
-      let spots = 0;
+    const stateDays = [ ...state.days ];
 
+    let days = stateDays.map((day) => {
+      let spots = 0;
+  
       day.appointments.forEach((appointment) => {
         if (!state.appointments[appointment].interview) {
           spots++
         }
       });
       day.spots = spots;
-      return day;
+      return day
     });
- 
+
     dispatch({ type: SET_SPOTS, days });
 
-  }, [state.days, state.appointments]);
+  }, [state.appointments]);
 
   return { state, setDay, bookInterview, cancelInterview };
 };
