@@ -25,6 +25,15 @@ const Appointment = (props) => {
     props.interview ? SHOW : EMPTY
   );
 
+  React.useEffect(() => {
+    if (props.interview && mode === EMPTY) {
+     transition(SHOW);
+    }
+    if (props.interview === null && mode === SHOW) {
+     transition(EMPTY);
+    }
+   }, [props.interview, transition, mode]);
+
   const save = (name, interviewer) => {
     const interview = {
       student: name,
@@ -57,7 +66,7 @@ const Appointment = (props) => {
     <article className="appointment">
       <Header time={props.time}/>
       {mode === EMPTY && <Empty onAdd={() => transition(CREATE)} />}
-      {mode === SHOW && (
+      {mode === SHOW && props.interview && (
         <Show
           student={props.interview.student}
           interviewer={props.interview.interviewer.name}
