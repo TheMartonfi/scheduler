@@ -7,6 +7,7 @@ const Form = props => {
   const [interviewer, setInterviewer] = React.useState(
     props.interviewer || null
   );
+  const [error, setError] = React.useState("");
 
   const reset = () => {
     setName("");
@@ -16,6 +17,15 @@ const Form = props => {
   const cancel = () => {
     reset();
     props.onCancel();
+  };
+
+  const validate = () => {
+    if (!name) {
+      setError("Student name cannot be blank");
+      return;
+    }
+
+    props.onSave(name, interviewer);
   };
 
   return (
@@ -32,6 +42,7 @@ const Form = props => {
             data-testid="student-name-input"
           />
         </form>
+        <section className="appointment__validation">{error}</section>
         <InterviewerList
           interviewers={props.interviewers}
           value={interviewer}
@@ -43,7 +54,7 @@ const Form = props => {
           <Button danger onClick={() => cancel()}>
             Cancel
           </Button>
-          <Button confirm onClick={() => props.onSave(name, interviewer)}>
+          <Button confirm onClick={() => validate()}>
             Save
           </Button>
         </section>

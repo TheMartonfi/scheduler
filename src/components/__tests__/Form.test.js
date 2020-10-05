@@ -49,7 +49,6 @@ describe("Form", () => {
       <Form interviewers={interviewers} name={studentName} onSave={onSave} />
     );
 
-    console.log(prettyDOM(getByText("Save")));
     fireEvent.click(getByText("Save"));
 
     expect(queryByText(/student name cannot be blank/i)).toBeNull();
