@@ -126,11 +126,13 @@ const useApplicationData = () => {
           spots++;
         }
       });
+
       day.spots = spots;
       return day;
     });
 
     dispatch({ type: SET_SPOTS, days });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.appointments]);
 
   return { state, setDay, bookInterview, cancelInterview };
