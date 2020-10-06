@@ -1,141 +1,116 @@
 import React from "react";
 import axios from "axios";
+import {
+	reducer,
+	SET_DAY,
+	SET_APPLICATION_DATA,
+	SET_INTERVIEW,
+	SET_SPOTS,
+} from "../reducers/application";
 
 const useApplicationData = () => {
-  const SET_DAY = "SET_DAY";
-  const SET_APPLICATION_DATA = "SET_APPLICATION_DATA";
-  const SET_INTERVIEW = "SET_INTERVIEW";
-  const SET_SPOTS = "SET_SPOTS";
+	const initialState = {
+		day: "Monday",
+		days: [],
+		appointments: {},
+		interviewers: {},
+	};
 
-  const initialState = {
-    day: "Monday",
-    days: [],
-    appointments: {},
-    interviewers: {},
-  };
+	const [state, dispatch] = React.useReducer(reducer, initialState);
+	const setDay = day => dispatch({ type: SET_DAY, day });
 
-  const reducer = (state, action) => {
-    switch (action.type) {
-      case SET_DAY:
-        return { ...state, day: action.day };
-      case SET_APPLICATION_DATA:
-        return {
-          ...state,
-          days: action.days,
-          appointments: action.appointments,
-          interviewers: action.interviewers,
-        };
-      case SET_INTERVIEW:
-        return {
-          ...state,
-          appointments: {
-            ...state.appointments,
-            [action.id]: {
-              ...state.appointments[action.id],
-              interview: action.interview,
-            },
-          },
-        };
-      case SET_SPOTS:
-        return { ...state, days: action.days };
-      default:
-        throw new Error(
-          `Tried to reduce with unsupported action type: ${action.type}`
-        );
-    }
-  };
+	const bookInterview = (id, interview) => {
+		const appointment = {
+			...state.appointments[id],
+			interview: { ...interview },
+		};
 
-  const [state, dispatch] = React.useReducer(reducer, initialState);
-  const setDay = day => dispatch({ type: SET_DAY, day });
+		return axios.put(`/api/appointments/${id}`, appointment).then(() => {
+			// This extra dispatch is only here for the tests to pass
+			// The websocket does the same thing
+			dispatch({ type: SET_INTERVIEW, id, interview: { ...interview } });
+		});
+	};
 
-  const bookInterview = (id, interview) => {
-    const appointment = {
-      ...state.appointments[id],
-      interview: { ...interview },
-    };
+	const cancelInterview = id => {
+		const appointment = {
+			...state.appointments[id],
+			interview: null,
+		};
 
-    return axios.put(`/api/appointments/${id}`, appointment).then(() => {
-      dispatch({ type: SET_INTERVIEW, id, interview: { ...interview } });
-    });
-  };
+		return axios.delete(`/api/appointments/${id}`, appointment).then(() => {
+			// This extra dispatch is only here for the tests to pass
+			// The websocket does the same thing
+			dispatch({ type: SET_INTERVIEW, id, interview: null });
+		});
+	};
 
-  const cancelInterview = id => {
-    const appointment = {
-      ...state.appointments[id],
-      interview: null,
-    };
+	// Get application data from api
+	React.useEffect(() => {
+		const daysPromise = axios.get("/api/days");
+		const appointmentsPromise = axios.get("/api/appointments");
+		const interviewersPromise = axios.get("/api/interviewers");
+		const promises = [daysPromise, appointmentsPromise, interviewersPromise];
 
-    return axios.delete(`/api/appointments/${id}`, appointment).then(() => {
-      dispatch({ type: SET_INTERVIEW, id, interview: null });
-    });
-  };
+		Promise.all(promises).then(all => {
+			const days = all[0].data;
+			const appointments = all[1].data;
+			const interviewers = all[2].data;
 
-  // Get application data from api
-  React.useEffect(() => {
-    const daysPromise = axios.get("/api/days");
-    const appointmentsPromise = axios.get("/api/appointments");
-    const interviewersPromise = axios.get("/api/interviewers");
-    const promises = [daysPromise, appointmentsPromise, interviewersPromise];
+			dispatch({
+				type: SET_APPLICATION_DATA,
+				days,
+				appointments,
+				interviewers,
+			});
+		});
+	}, []);
 
-    Promise.all(promises).then(all => {
-      const days = all[0].data;
-      const appointments = all[1].data;
-      const interviewers = all[2].data;
+	// Websocket connection that listens for interview changes
+	React.useEffect(() => {
+		const webSocket = new WebSocket(process.env.REACT_APP_WEBSOCKET_URL);
 
-      dispatch({
-        type: SET_APPLICATION_DATA,
-        days,
-        appointments,
-        interviewers,
-      });
-    });
-  }, []);
+		webSocket.onmessage = event => {
+			const data = JSON.parse(event.data);
+			const id = data.id;
+			const interview = data.interview;
 
-  // Websocket connection that listens for interview changes
-  React.useEffect(() => {
-    const webSocket = new WebSocket(process.env.REACT_APP_WEBSOCKET_URL);
+			if (data.type === SET_INTERVIEW) {
+				if (interview) {
+					dispatch({ type: SET_INTERVIEW, id, interview: { ...interview } });
+				} else {
+					dispatch({ type: SET_INTERVIEW, id, interview: null });
+				}
+			}
+		};
 
-    webSocket.onmessage = event => {
-      const data = JSON.parse(event.data);
-      const id = data.id;
-      const interview = data.interview;
+		return () => {
+			webSocket.close();
+		};
+	}, []);
 
-      if (data.type === SET_INTERVIEW) {
-        if (interview) {
-          dispatch({ type: SET_INTERVIEW, id, interview: { ...interview } });
-        } else {
-          dispatch({ type: SET_INTERVIEW, id, interview: null });
-        }
-      }
-    };
+	// Update spots when appointments change
+	React.useEffect(() => {
+		const stateDays = [...state.days];
 
-    return () => {
-      webSocket.close();
-    };
-  }, []);
+		let days = stateDays.map(day => {
+			let spots = 0;
 
-  // Update spots when appointments change
-  React.useEffect(() => {
-    const stateDays = [...state.days];
+			day.appointments.forEach(appointment => {
+				if (!state.appointments[appointment].interview) {
+					spots++;
+				}
+			});
 
-    let days = stateDays.map(day => {
-      let spots = 0;
+			day.spots = spots;
+			return day;
+		});
 
-      day.appointments.forEach(appointment => {
-        if (!state.appointments[appointment].interview) {
-          spots++;
-        }
-      });
+		dispatch({ type: SET_SPOTS, days });
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [state.appointments]);
 
-      day.spots = spots;
-      return day;
-    });
-
-    dispatch({ type: SET_SPOTS, days });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.appointments]);
-
-  return { state, setDay, bookInterview, cancelInterview };
+	return { state, setDay, bookInterview, cancelInterview };
 };
 
 export default useApplicationData;

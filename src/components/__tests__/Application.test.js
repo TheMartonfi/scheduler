@@ -124,7 +124,7 @@ describe("Application", () => {
 	it("shows the save error when failing to save an appointment", async () => {
 		axios.put.mockRejectedValueOnce();
 
-		const { container, debug } = render(<Application />);
+		const { container } = render(<Application />);
 		const studentName = "Lydia Miller-Jones";
 
 		await waitForElement(() => getByText(container, "Archie Cohen"));
