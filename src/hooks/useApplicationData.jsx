@@ -68,7 +68,10 @@ const useApplicationData = () => {
 
 	// Websocket connection that listens for interview changes
 	React.useEffect(() => {
-		const webSocket = new WebSocket(process.env.REACT_APP_WEBSOCKET_URL);
+		const webSocket = new WebSocket(
+			process.env.REACT_APP_WEBSOCKET_URL ||
+				"ws://themartonfi-scheduler-api.herokuapp.com"
+		);
 
 		webSocket.onmessage = event => {
 			const data = JSON.parse(event.data);
