@@ -1,3 +1,6 @@
+// I know this import is uncessary but eslint was screaming at me
+import cy from "cypress";
+
 describe("Navigation", () => {
 	it("should visit root", () => {
 		cy.visit("/");
