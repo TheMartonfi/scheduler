@@ -18,7 +18,8 @@
 		"eject": "react-scripts eject",
 		"storybook": "start-storybook -p 9009 -s public --ci",
 		"build-storybook": "build-storybook -s public",
-		"coverage": "react-scripts test --coverage --watchAll=false"
+		"coverage": "react-scripts test --coverage --watchAll=false",
+		"cypress": "cypress open -P ."
 	},
 	"browserslist": {
 		"production": [
