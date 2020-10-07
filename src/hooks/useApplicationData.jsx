@@ -70,7 +70,7 @@ const useApplicationData = () => {
 	React.useEffect(() => {
 		const webSocket = new WebSocket(
 			process.env.REACT_APP_WEBSOCKET_URL ||
-				"ws://themartonfi-scheduler-api.herokuapp.com"
+				"ws://https//themartonfi-scheduler-api.herokuapp.com/"
 		);
 
 		webSocket.onmessage = event => {
