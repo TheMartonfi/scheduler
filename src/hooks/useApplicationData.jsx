@@ -91,9 +91,7 @@ const useApplicationData = () => {
 
 	// Update spots when appointments change
 	React.useEffect(() => {
-		const stateDays = [...state.days];
-
-		let days = stateDays.map(day => {
+		let days = state.days.map(day => {
 			let spots = 0;
 
 			day.appointments.forEach(appointment => {
@@ -102,8 +100,7 @@ const useApplicationData = () => {
 				}
 			});
 
-			day.spots = spots;
-			return day;
+			return { ...day, spots };
 		});
 
 		dispatch({ type: SET_SPOTS, days });
