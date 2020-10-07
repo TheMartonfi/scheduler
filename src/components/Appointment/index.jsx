@@ -24,6 +24,7 @@ const Appointment = props => {
 		props.interview ? SHOW : EMPTY
 	);
 
+	// Properly transition interviews when modified by other clients
 	React.useEffect(() => {
 		if (props.interview && mode === EMPTY) {
 			transition(SHOW);
@@ -33,6 +34,7 @@ const Appointment = props => {
 		}
 	}, [props.interview, transition, mode]);
 
+	// Save interview and transition
 	const save = (name, interviewer) => {
 		const interview = {
 			student: name,
@@ -50,6 +52,7 @@ const Appointment = props => {
 			});
 	};
 
+	// Delete interview and transition
 	const destroy = () => {
 		transition(DELETING, true);
 		props
