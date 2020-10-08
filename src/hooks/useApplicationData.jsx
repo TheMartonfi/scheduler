@@ -27,7 +27,6 @@ const useApplicationData = () => {
 
 		return axios.put(`/api/appointments/${id}`, appointment).then(() => {
 			// This extra dispatch is only here for the tests to pass
-			// The websocket does the same thing
 			dispatch({ type: SET_INTERVIEW, id, interview: { ...interview } });
 		});
 	};
@@ -40,7 +39,6 @@ const useApplicationData = () => {
 
 		return axios.delete(`/api/appointments/${id}`, appointment).then(() => {
 			// This extra dispatch is only here for the tests to pass
-			// The websocket does the same thing
 			dispatch({ type: SET_INTERVIEW, id, interview: null });
 		});
 	};
@@ -69,6 +67,7 @@ const useApplicationData = () => {
 	// Websocket connection that listens for interview changes
 	React.useEffect(() => {
 		const webSocket = new WebSocket(
+			//If I don't provide the URL here it doesn't pass the tests and can't deploy
 			process.env.REACT_APP_WEBSOCKET_URL ||
 				"wss://themartonfi-scheduler-api.herokuapp.com/"
 		);

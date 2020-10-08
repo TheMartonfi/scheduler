@@ -1,23 +1,20 @@
-# Interview Scheduler
+# [Interview Scheduler](https://dreamy-brown-256423.netlify.app/)
 
-## Setup
+Interview Scheduler is a single page full stack web application that uses Javascript, ReactJS and an API that uses NodeJS with PostgreSQL. The application allows you to book interviews for students with interviewers for any weekdays and you can also cancel and edit interviews.
 
-Install dependencies with `npm install`.
+## Getting Started
 
-## Running Webpack Development Server
+1. Install dependencies using the `npm install` command.
+2. Start the web server using the `npm start` command. The app will be served at <http://localhost:8000/>.
+3. Go to <http://localhost:8000/> in your browser.
 
-```sh
-npm start
-```
+## Dependencies
 
-## Running Jest Test Framework
+- React
+- Axios
+- classnames
+- normalize.css
 
-```sh
-npm test
-```
+## Screenshots
 
-## Running Storybook Visual Testbed
-
-```sh
-npm run storybook
-```
+![]()
